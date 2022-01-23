@@ -1,3 +1,4 @@
+# 큐를 구현할 때 사용하는 라이브러리 !
 from collections import deque
 # 스택
 stack = deque()
