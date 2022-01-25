@@ -1,3 +1,4 @@
+# 문제: https://www.acmicpc.net/problem/1260
 from collections import deque
 
 n, m, v = map(int,input().split())
