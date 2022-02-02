@@ -1,9 +1,4 @@
+_list = [(2, 4), (2, 3), (1, 5), (3, 2), (2, 6)]
 
-import sys
-sys.setrecursionlimit(10 ** 8)
-input = sys.stdin.readline
-
-n = int(input())
-
-box = set(map(int, input().split()))
-print(box)
+sorted_list = sorted(_list, key = lambda dt: (dt[0], dt[1]))
+print(sorted_list)

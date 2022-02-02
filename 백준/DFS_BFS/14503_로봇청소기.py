@@ -34,3 +34,4 @@ a = [list(map(int, input().split())) for _ in range(n)]
 
 ans = 0
 clean(x, y, d)
+print(ans)
