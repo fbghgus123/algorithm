@@ -1,3 +1,5 @@
+# 문제: https://www.acmicpc.net/problem/1780
+
 import sys
 input = sys.stdin.readline
 
@@ -20,15 +22,12 @@ def check(x, y, n):
 
     if all == 0 and start != 2:
         zero += 1
-        print(x, y, n, 'zero')
         return
     if all == n**2:
         one += 1
-        print(x, y, n, 'one')
         return
     if all == -n**2:
         minus += 1
-        print(x, y, n, 'minus')
         return
 
     for i in range(3):
