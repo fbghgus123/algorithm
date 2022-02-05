@@ -1,3 +1,5 @@
+# 문제: https://www.acmicpc.net/problem/17609
+
 import sys
 from collections import deque
 input = sys.stdin.readline
@@ -29,5 +31,3 @@ for _ in range(t):
                 answer.append(2)
                 break
 [print(i) for i in answer]
-    
-    
