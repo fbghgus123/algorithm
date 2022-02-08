@@ -1,4 +1,7 @@
+# 문제: https://www.acmicpc.net/problem/1012
+
 import sys
+sys.setrecursionlimit(100000)
 input = sys.stdin.readline
 
 t = int(input())
