@@ -1,38 +1,32 @@
-import sys
+# 문제: https://www.acmicpc.net/problem/1325
+# 도움된 글: https://jinho-study.tistory.com/928
+
 from collections import deque
-input = sys.stdin.readline
+import sys
 
-n, m = map(int, input().split())
-computers = dict()
-maxx = 0
+def bfs(node):
+    q = deque()
+    q.append(node)
+    check[node] = 1
+    while q:
+        node = q.popleft()
+        for n in graph[node]:
+            if check[n] == 0:
+                check[n] = 1
+                q.append(n)
 
-for i in range(m):
-    b, a = map(int, input().split())
-    if a in computers:
-        computers[a].append(b)
-    else:
-        computers[a] = [b]
-
-def bfs(v):
-    check = [0] * (n+1)
-    queue = deque()
-    queue.append(v)
-    check[v] = 1
-    while queue:
-        v = queue.popleft()
-        if v in computers:
-            for i in computers[v]:
-                if check[i] == 0:
-                    check[v] = 1
-                    queue.append(i)
-    return sum(check)
-
-answer = []
-for i in range(1, n+1):
-    count = bfs(i)
-    if count > maxx:
-        answer = [i]
-        maxx = count
-    elif count == maxx:
-        answer.append(i)
-print(*answer)
+N, M = map(int, sys.stdin.readline().split())
+graph = [[] for _ in range(N+1)]
+for _ in range(M):
+    u, v = map(int, sys.stdin.readline().split())
+    graph[v].append(u)
+res = []
+for i in range(1, N+1):
+    check = [0]*(N+1)
+    bfs(i)
+    res.append(check.count(1))
+m = max(res)
+for i in range(N):
+    if res[i] == m:
+        print(i+1, end=' ')
+print()
