@@ -1,3 +1,6 @@
+# 문제: https://www.acmicpc.net/problem/1753
+# 도움된 글: https://resilient-923.tistory.com/335
+
 import sys
 import heapq
 input = sys.stdin.readline
