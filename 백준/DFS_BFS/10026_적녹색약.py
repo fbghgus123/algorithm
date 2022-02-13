@@ -1,3 +1,5 @@
+# 문제: https://www.acmicpc.net/problem/10026
+
 import sys
 from collections import deque
 input = sys.stdin.readline
@@ -15,12 +17,13 @@ def bfs(v, type):
 
     while queue:
         v = queue.popleft()
-        visited[v[0]][v[1]] = 1
-        for i in range(4):
-            x = v[0] + dx[i]
-            y = v[1] + dy[i]
-            if 0 <= x < n and 0 <= y < n and visited[x][y] == 0 and area[x][y] == type:
-                queue.append((x, y))
+        if visited[v[0]][v[1]] == 0:
+            visited[v[0]][v[1]] = 1
+            for i in range(4):
+                x = v[0] + dx[i]
+                y = v[1] + dy[i]
+                if 0 <= x < n and 0 <= y < n and area[x][y] == type:
+                    queue.append((x, y))
 
 count = 0
 for i in range(n):
