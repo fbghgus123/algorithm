@@ -1,3 +1,5 @@
+# 문제: https://www.acmicpc.net/problem/3190
+
 import sys
 from collections import deque
 input = sys.stdin.readline
@@ -46,6 +48,5 @@ while(1):
         else:
             direction -= 1
             if direction < 0: direction += 4
-    print(snake, direction)
 
 print(second)
