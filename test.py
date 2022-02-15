@@ -1,31 +1,18 @@
-import sys
-import heapq
-input = sys.stdin.readline
-INF = sys.maxsize
+N = int(input())
 
-n = int(input())
-m = int(input())
-bus = [[] for _ in range(n+1)]
+lineList = []
 
-for _ in range(m):
-    s, e, v = map(int, input().split())
-    bus[s].append((e, v))
-s, e = map(int, input().split())
+for _ in range(N):
+    lineList.append(list(map(int, input().split())))
 
-bill = [INF] * (n+1)
-bill[s] = 0
+lineList.sort()
 
-heap = []
-heapq.heappush(heap, (0, s))
-while heap:
-    dist, now = heapq.heappop(heap)
+dp = [1]*N
+for i in range(N):
+    print(dp)
+    for j in range(i):
+        if lineList[i][1] > lineList[j][1] and dp[i] < dp[j]+1:
+            dp[i] = dp[j] + 1
+            print(i, j)
 
-    if bill[now] < dist:
-        continue
-
-    for next, weight in bus[now]:
-        cost = dist + weight
-        if cost <  bill[next]:
-            bill[next] = cost
-            heapq.heappush(heap, (cost, next))
-print(bill[e])
+print(N-max(dp))
