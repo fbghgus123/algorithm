@@ -1,31 +1,22 @@
-import sys
-import heapq
-input = sys.stdin.readline
-INF = sys.maxsize
+def solution(dartResult):
+    dartResult = list(dartResult)
+    bonus = {'S':1, 'D':2, 'T':3}
+    option = {'#': -1, '*': 2}
+    while dartResult:
+        print(dartResult)
+        tmp = dartResult.pop(0)
+        
+        if tmp == '1' and dartResult[0] == '0':
+            tmp += dartResult.pop(0)
+        
+        score = int(tmp)
+        
+        tmp = dartResult.pop(0)
+        score **= bonus[tmp]
+        
+        if dartResult[0] == '#' or dartResult[0] == '*':
+            tmp = dartResult.pop(0)
+            score *= option[tmp]
+        print(score)
 
-n = int(input())
-m = int(input())
-bus = [[] for _ in range(n+1)]
-
-for _ in range(m):
-    s, e, v = map(int, input().split())
-    bus[s].append((e, v))
-s, e = map(int, input().split())
-
-bill = [INF] * (n+1)
-bill[s] = 0
-
-heap = []
-heapq.heappush(heap, (0, s))
-while heap:
-    dist, now = heapq.heappop(heap)
-
-    if bill[now] < dist:
-        continue
-
-    for next, weight in bus[now]:
-        cost = dist + weight
-        if cost <  bill[next]:
-            bill[next] = cost
-            heapq.heappush(heap, (cost, next))
-print(bill[e])
+solution('1S2D*3T')
