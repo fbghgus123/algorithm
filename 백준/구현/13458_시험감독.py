@@ -1,3 +1,5 @@
+# 문제 : https://www.acmicpc.net/problem/13458
+
 import math
 
 n = int(input())
@@ -9,6 +11,5 @@ for i in room:
     count = 1
     if num > 0:
         count += math.ceil(num / b)
-    print(count)
     answer += count
 print(answer)
