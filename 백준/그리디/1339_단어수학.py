@@ -1,6 +1,5 @@
 # 문제 : https://www.acmicpc.net/problem/1339
 
-from calendar import LocaleTextCalendar
 import sys
 from collections import defaultdict
 input = sys.stdin.readline
