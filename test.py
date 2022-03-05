@@ -1,14 +1,13 @@
-# 문제 : https://www.acmicpc.net/problem/11055
-
-import sys
-input = sys.stdin.readline
-
 n = int(input())
-nums = list(map(int, input().split()))
-dp = nums.copy()
+num = list(map(int, input().split()))
+
+dp = [[0] * n for _ in range(n)]
 
 for i in range(n):
     for j in range(i+1, n):
-        if nums[i] < nums[j]:
-            dp[j] = max(dp[i] + nums[j], dp[j])
-print(max(dp))
+        if num[i] < num[j]:
+            dp[i][j] = max(dp[i-1][j], dp[i-1][i] + 1)
+        else:
+            dp[i][j] = dp[i-1][j]
+
+[print(i) for i in dp]
