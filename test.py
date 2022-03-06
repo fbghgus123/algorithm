@@ -1,13 +1,13 @@
-n = int(input())
-num = list(map(int, input().split()))
-
-dp = [[0] * n for _ in range(n)]
-
-for i in range(n):
-    for j in range(i+1, n):
-        if num[i] < num[j]:
-            dp[i][j] = max(dp[i-1][j], dp[i-1][i] + 1)
-        else:
-            dp[i][j] = dp[i-1][j]
-
-[print(i) for i in dp]
+string = list(map(int, list(input())))
+test = []
+count = 0
+for i in range(len(string)):
+    if i == len(string)-1:
+        test.append(count)
+        break
+    if string[i] < 3 and string[i+1] < 7:
+        count += 1
+    else:
+        test.append(count)
+        count = 0
+print(test)
