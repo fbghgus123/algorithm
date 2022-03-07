@@ -1,12 +1,16 @@
-# 문제: https://www.acmicpc.net/problem/2631
-# 도움된 글: https://ddiyeon.tistory.com/61
+# 문제 : https://www.acmicpc.net/problem/2631
 
 import sys
 input = sys.stdin.readline
 
 n = int(input())
-line = [int(input()) for _ in range(n)]
-dp = []
+kid = []
+for _ in range(n):
+    kid.append(int(input()))
 
-for i in line:
-    dp.append(i)
+dp = [0] * (n+1)
+for i in range(1, n):
+    for j in range(i, n+1):
+        if kid[i-1] < kid[j-1]:
+            dp[j] = max(dp[i] + 1, dp[j])
+print(n - max(dp) - 1)
