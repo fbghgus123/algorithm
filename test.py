@@ -1,44 +1,44 @@
+# 문제 : https://www.acmicpc.net/problem/1600
+
 import sys
 from collections import deque
 input = sys.stdin.readline
 
-option = []
-for _ in range(4):
-    option.append(deque(input().strip()))
-
-def cal():
-    tmp = [[0, 0] for _ in range(4)]
-    for i in range(4):
-        if i < 3 and option[i][2] != option[i+1][-2]:
-            tmp[i][1] = 1
-        if i > 0 and option[i][-2] != option[i-1][2]:
-            tmp[i][0] = 1
-    return tmp
-
-def rotate(num, direction):
-    if direction == 1:
-        option[num-1].appendleft(option[num-1].pop())
-    else:
-        option[num-1].append(option[num-1].popleft())
-
 k = int(input())
-for _ in range(k):
-    connect = cal()
-    visited = [0, 0, 0, 0]
-    queue = deque()
-    num, direction = map(int, input().split())
-    queue.append((num, direction))
+w, h = map(int, input().split())
+grid = [list(map(int, input().split())) for _ in range(h)]
 
-    while queue:
-        num, direction = queue.popleft()
-        rotate(num, direction)
-        visited[num-1] = 1
-        if num - 1 > 0 and connect[num-1][0] == 1 and visited[num-2] == 0:
-            queue.append((num-1, -direction))
-        if num < 4 and connect[num-1][1] == 1 and visited[num] == 0:
-            queue.append((num+1, -direction))
+dp = [[[0] * w for _ in range(h)] for _ in range(k+1)]
 
-ans = 0
-for i in range(4):
-    ans += 2 ** i * int(option[i][0])
-print(ans)
+move = [(0, 0, 1), (0, 1, 0), (0, -1, 0), (0, 0, -1)]
+horse_move = [(-1, -1, -2), (-1, -2, -1), (-1, -2, 1), (-1, -1, 2), (-1, 1, -2), (-1, 2, -1), (-1, 1, 2), (-1, 2, 1)]
+
+queue = deque()
+queue.append((k, 0, 0))
+dp[k][0][0] = 1
+
+while queue:
+    k, x, y = queue.popleft()
+    if k > 0:
+        for i in range(8):
+            ck = k - 1
+            cx = x + horse_move[i][1]
+            cy = y + horse_move[i][2]
+            if 0 <= cx < h and 0 <= cy < w and grid[cx][cy] != 1 and dp[ck][cx][cy] == 0:
+                queue.append((ck, cx, cy))
+                dp[ck][cx][cy] = dp[k][x][y] + 1
+    for i in range(4):
+        cx = x + move[i][1]
+        cy = y + move[i][2]
+        if 0 <= cx < h and 0 <= cy < w and grid[cx][cy] != 1 and dp[k][cx][cy] == 0:
+            queue.append((k, cx, cy))
+            dp[k][cx][cy] = dp[k][x][y] + 1
+
+minn = 200 ** 2
+for i in dp:
+    if i[h-1][w-1] < minn and i[h-1][w-1] != 0:
+        minn = i[h-1][w-1]
+if minn == 200 ** 2:
+    print(-1)
+else:
+    print(minn - 1)
