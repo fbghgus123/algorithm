@@ -1,3 +1,6 @@
+# 문제 : https://www.acmicpc.net/problem/1202
+# 도움된 글 : https://velog.io/@piopiop/백준-1202-보석-도둑-Python
+
 import sys
 import heapq
 input = sys.stdin.readline
