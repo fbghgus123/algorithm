@@ -1,26 +1,11 @@
-import sys
-import heapq
-input = sys.stdin.readline
-
 n, k = map(int, input().split())
-jewel = []
-bag = []
-answer = 0
+i = 0
+while n > 2 ** i:
+    i += 1
 
-for _ in range(n):
-    m, v = map(int, input().split())
-    heapq.heappush(jewel, (m, v))
-for _ in range(k):
-    bag.append(int(input()))
-bag.sort()
-
-tmp = []
-for i in bag:
-    while jewel and jewel[0][0] <= i:
-        heapq.heappush(tmp, -heapq.heappop(jewel)[1])
-    if tmp:
-        answer -= heapq.heappop(tmp)
-    elif not jewel:
-        break
-
-print(answer)
+for j in range(i-1,-1,-1):
+    if n > 2 ** j:
+        k -= 1
+        n -= 2 ** j
+print(2**j, n)
+print(2**j - n)
