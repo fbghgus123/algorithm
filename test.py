@@ -1,36 +1,22 @@
-import sys
-import copy
-input = sys.stdin.readline
-n = int(input())
+a, b = map(int, input().split())
 
-candy = [list(input().strip()) for _ in range(n)]
+a = list(map(int, list(str(a))))
 maxx = 0
 
-# direction == 0 가로 1 세로
-def check(x, y, direction, arr):
-    tmp = [0] * n
-    tmp[0] = 1
+def dfs(select, current):
+    global maxx
+    if len(select) == len(a):
+        num = int(''.join(map(str, select)))
+        if maxx < num < b:
+            maxx = num
 
-    for i in range(1, n):
-        if direction == 0 and arr[x][i] == arr[x][i-1]:
-            tmp[i] = tmp[i-1] + 1
-        elif direction == 1 and arr[i][y] == arr[i-1][y]:
-            tmp[i] = tmp[i-1] + 1
-        else:
-            tmp[i] = 1
-    return max(tmp)
+    for i in range(len(current)):
+        if not select and current[i] == 0:
+            continue
+        dfs(select + [current[i]], current[:i] + current[i+1:])
 
-for i in range(n):
-    maxx = max(maxx, check(i, 0, 0, candy))
-    maxx = max(maxx, check(0, i, 1, candy))
-    for j in range(n):
-        if i < n-1 and candy[i][j] != candy[i+1][j]:
-            grid = copy.deepcopy(candy)
-            grid[i][j], grid[i+1][j] = grid[i+1][j], grid[i][j]
-            maxx = max(maxx, check(i, j, 1, grid), check(i, j, 0, grid), check(i+1, j, 0, grid))
-        if j < n-1 and candy[i][j] != candy[i][j+1]:
-            grid = copy.deepcopy(candy)
-            grid[i][j], grid[i][j+1] = grid[i][j+1], grid[i][j]
-            maxx = max(maxx, check(i, j, 0, grid), check(i, j, 1, grid), check(i, j+1, 1, grid))
-    
-print(maxx)
+dfs([], a)
+if maxx == 0:
+    print(-1)
+else:
+    print(maxx)
