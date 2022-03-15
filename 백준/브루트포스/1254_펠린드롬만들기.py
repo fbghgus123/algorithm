@@ -1,3 +1,5 @@
+# 문제 : https://www.acmicpc.net/problem/1254
+
 s = input()
 if s == s[::-1]:
     print(len(s))
