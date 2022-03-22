@@ -1,3 +1,6 @@
+# 문제 : https://www.acmicpc.net/problem/11404
+# 도움된 글 : https://chanhuiseok.github.io/posts/algo-50/
+
 import sys
 input = sys.stdin.readline
 INF = sys.maxsize
