@@ -1,3 +1,5 @@
+# 문제 : https://www.acmicpc.net/problem/1422
+
 import sys
 from functools import cmp_to_key
 input = sys.stdin.readline
