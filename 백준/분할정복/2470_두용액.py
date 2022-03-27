@@ -1,10 +1,13 @@
+# 문제 : https://www.acmicpc.net/problem/2470
+# 도움된 글 : https://data-bank.tistory.com/29
+
 n = int(input())
 nums = list(map(int, input().split()))
 nums.sort()
 
 left = 0
 right = n-1
-minn = 1_000_000_001
+minn = 2_000_000_001
 answer = []
 
 while left < right:
