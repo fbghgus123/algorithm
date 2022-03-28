@@ -1,22 +1,9 @@
-n = int(input())
-nums = list(map(int, input().split()))
-nums.sort()
+n, m = map(int, input().split())
+memory = list(map(int, input().split()))
+a = list(zip(memory.copy(), map(int, input().split())))
+total = sum(memory)
 
-left = 0
-right = n-1
-minn = 1_000_000_001
-answer = []
+dp = [[total] * (n+1) for _ in range(n+1)]
 
-while left < right:
-    summ = nums[left] + nums[right]
-    if minn > abs(summ):
-        answer = [nums[left], nums[right]]
-        minn = abs(summ)
-        if summ == 0:
-            break
-    
-    if summ > 0:
-        right -= 1
-    elif summ < 0:
-        left += 1
-print(*answer)
+
+print(dp)
