@@ -1,3 +1,5 @@
+# 문제 : https://www.acmicpc.net/problem/13913
+
 from collections import deque
 import sys
 sys.setrecursionlimit(100000)
@@ -30,7 +32,7 @@ while queue:
 
 answer = []
 x = k
-print(trace[:10])
+
 while trace[x] != -1:
     answer.append(x)
     x = trace[x]
