@@ -1,44 +1,15 @@
-from collections import deque
 import sys
-sys.setrecursionlimit(100000)
+input = sys.stdin.readline
 
-maxx = 1_000_000_007
-n = int(input())
-string = input()
-dp = [0] * n
-fibb = [0] * 200_001
-fibb[0] = 1
-fibb[1] = 1
-e = deque()
-answer = 0
-
-def fib(n):
-    if fibb[n]: return fibb[n]
-    fibb[n] = n * fib(n-1)
-    return fibb[n]
-
-def choose(n, c):
-    return fib(n) // (fib(c) * fib(n-c))
-
-for i in range(n):
-    if string[i] == 'W':
-        for j in range(i, n):
-            if string[j] == 'H':
-                dp[j] += 1
+t = int(input())
+for _ in range(t):
+    n = int(input())
+    sticker = [list(map(int, input().split())) for _ in range(2)]
     
-    if string[i] == 'H':
-        for j in range(i, n):
-            if string[j] == 'E':
-                dp[j] += dp[i]
-
-    if string[i] == 'E':
-        e.append(i)
-
-while e:
-    tmp = e.popleft()
-    lastE = 0
-    for i in range(1, len(e)+1):
-        lastE += choose(len(e), i)
-    lastE %= maxx
-    answer += lastE * dp[tmp] % maxx
-print(answer % maxx)
+    dp = [[0] * (n+1) for _ in range(2)]
+    dp[0][1] = sticker[0][0]
+    dp[1][1] = sticker[1][0]
+    for i in range(2, n+1):
+        dp[0][i] = max(dp[0][i-1], dp[0][i-2] + sticker[0][i-1], dp[1][i-1] + sticker[0][i-1])
+        dp[1][i] = max(dp[1][i-1], dp[1][i-2] + sticker[1][i-1], dp[0][i-1] + sticker[1][i-1])
+    print(max(max(dp[0]), max(dp[1])))
