@@ -1,3 +1,5 @@
+# 문제 : https://www.acmicpc.net/problem/9663
+
 n = int(input())
 answer = 0
 chess = [-1] * n
