@@ -1,3 +1,5 @@
+# 문제 : https://www.acmicpc.net/problem/2056
+
 from collections import defaultdict, deque
 
 n = int(input())
