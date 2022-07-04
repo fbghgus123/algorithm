@@ -11,6 +11,8 @@
     "__split_buffer": "cpp",
     "deque": "cpp",
     "memory": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "stack": "cpp",
+    "ios": "cpp"
   }
 }
