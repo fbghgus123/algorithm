@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import copy
 
 n, m = map(int, input().split())
@@ -127,3 +128,36 @@ def btk(count, prev):
 
 btk(1, 0)
 print(min(answer))
+=======
+from itertools import permutations
+
+field = [0, 0, 0]
+
+def hit1(field):
+    global score
+    score += sum(field[:1])
+    field = field[1:] + [1]
+    return field
+
+def hit2(field):
+    global score
+    score += sum(field[:2])
+    field = field[2:] + [1, 0]
+    return field
+
+def hit3(field):
+    global score
+    score += sum(field[:3])
+    field = [1, 0, 0]
+    return field
+
+def homerun(field):
+    global score
+    score += sum(field) + 1
+    field = [0, 0, 0]
+    return field
+
+n = int(input())
+for i in permutations(list(range(8)), 8):
+    print(i)
+>>>>>>> 8f713bcdc344807842ffa5703a94aeba8d694e2a
