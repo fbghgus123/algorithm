@@ -1,58 +1,62 @@
 #include <stdio.h>
-#include <algorithm>
-#include <map>
 
 using namespace std;
 
-int N;
-int tmpN;
+long long int k, c;
 
-int tree[1024 * 1024 * 2];
-int nums[500000];
-int order[500000];
-map<int, int> mapp;
-
-void update(int i) {
-    tree[i]++;
-    while (i > 0) {
-        i = i >> 1;
-        tree[i] = tree[i*2] + tree[i*2+1];
+long long int gcd(long long int a, long long int b) {
+    if (b == 0) {
+        return a;
     }
+    return gcd(b, a%b);
 }
 
-int get_sum(int a, int b) {
-    int sum = 0;
-    while (a <= b) {
-        if ((a&1) == 1) {
-            sum += tree[a];
+long long int get_candy(long long int A, long long int B, long long int C, long long int D) {
+    long long int first = c*A + k*B;
+    long long int second = c*C + k*D;
+    long long int mod = first % second;
+    long long int quantity = first / second;
+
+    printf("%lld %lld %lld\n%lld %lld %lld\n\n", A, B, first, C, D, second);
+
+    long long int tmpC = A - C * quantity;
+    long long int tmpD = B - D * quantity;
+
+    if (mod == 1) {
+        if (tmpC > 0) {
+            return tmpC;
+        } else {
+            return C - tmpC;
         }
-        if ((b&1) == 0) {
-            sum += tree[b];
-        }
-        a = (a+1) >> 1;
-        b = (b-1) >> 1;
+    } else {
+        return get_candy(C, D, tmpC, tmpD);
     }
-    return sum;
 }
 
 int main() {
-    scanf("%d", &N);
-    for (tmpN = 1; tmpN < N; tmpN = tmpN << 1);
-    for (int i=0; i < tmpN*2; i++) tree[i] = 0;
-    
-    for (int i=0; i<N; i++) scanf("%d", &order[i]);
-    copy(order, order+N, nums);
+    int t;
+    scanf("%d", &t);
 
-    sort(nums, nums+N);
-    for (int i=tmpN; i<tmpN+N; i++) {
-        mapp.insert({nums[i-tmpN], i});
+    for (int i=0; i<t; i++) {
+        scanf("%lld %lld", &k, &c);
+        if (gcd(k, c) != 1) {
+            printf("IMPOSSIBLE\n");
+        }
+        else if (c == 1) {
+            if (k == 1000000000) {
+                printf("IMPOSSIBLE\n");
+            } 
+            else {
+                printf("%lld\n", k+1);
+            }
+        }
+        else {
+            long long int ans =  get_candy(0, 1, 1, 0);
+            if (ans > 1000000000) {
+                printf("IMPOSSIBLE\n");
+            } else {
+                printf("%lld\n", ans);
+            }
+        }
     }
-
-    for (int i=0; i<N; i++) {
-        int current = mapp[order[i]];
-        update(current);
-        printf("%d\n", i+1 - get_sum(tmpN, current-1));
-    }
-
-    return 0;
 }
