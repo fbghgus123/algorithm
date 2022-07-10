@@ -1,48 +1,43 @@
+// 문제 : https://www.acmicpc.net/problem/1981
+
 #include <stdio.h>
 #include <queue>
-#include <vector>
 
 using namespace std;
 
-int N, grid[50][50];
-int minn = 1000000, maxx = 0;
+int N, grid[100][100], minn = 200, maxx = 0;
 
 struct p {
     int y, x;
 };
-p home;
-vector<p> target;
 
-int dy[8] = {0, 1, 0, -1, -1, -1, 1, 1};
-int dx[8] = {1, 0, -1, 0, -1, 1, -1 ,1};
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
 
 bool bfs(int a, int b) {
-    if (a > grid[home.y][home.x] || b < grid[home.y][home.x]) return false;
-    bool visited[50][50];
-    for (int i=0; i<50; i++) for (int j=0; j<50; j++) visited[i][j] = true;
+    if (a > grid[0][0] || a > grid[N-1][N-1] || b < grid[0][0] || b < grid[N-1][N-1]) return false;
     queue<p> q;
-    q.push(home);
-    visited[home.y][home.x] = false;
-
+    bool visited[N][N];
+    for (int i=0; i<N; i++) for (int j=0; j<N; j++) visited[i][j] = true; 
+    visited[0][0] = false;
+    q.push({0, 0});
+    
     while (!q.empty()) {
         p current = q.front();
         q.pop();
-        for (int i=0; i<8; i++) {
+        for (int i=0; i<4; i++) {
             int cy = current.y + dy[i];
             int cx = current.x + dx[i];
             if (0 <= cy && 0 <= cx && cy < N && cx < N) {
-                if (visited[cy][cx] && a <= grid[cy][cx] && grid[cy][cx] <= b) {
+                if (grid[cy][cx] >= a && grid[cy][cx] <= b && visited[cy][cx]) {
+                    if (cy == N-1 && cx == N-1) return true;
                     visited[cy][cx] = false;
                     q.push({cy, cx});
                 }
             }
         }
     }
-    for (int i=0; i<target.size(); i++) {
-        p current = target[i];
-        if (visited[current.y][current.x]) return false;
-    }
-    return true;
+    return false;
 }
 
 int search_maxx(int left) {
@@ -83,21 +78,13 @@ int search_minn(int right) {
 
 int main() {
     scanf("%d", &N);
-    for (int i=0; i<N; i++) {
-        char tmp[50];
-        scanf("%s", tmp);
+    for (int i=0; i<N; i++)
         for (int j=0; j<N; j++) {
-            if (tmp[j] == 'P') home = {i, j};
-            if (tmp[j] == 'K') target.push_back({i, j});
+            scanf("%d", &grid[i][j]);
+            minn = grid[i][j] < minn ? grid[i][j] : minn;
+            maxx = grid[i][j] > maxx ? grid[i][j] : maxx;
         }
-    }
-    for (int i=0; i<N; i++) for (int j=0; j<N; j++) {
-        scanf("%d", &grid[i][j]);
-        minn = minn > grid[i][j] ? grid[i][j] : minn;
-        maxx = maxx < grid[i][j] ? grid[i][j] : maxx;
-    }
-
-    int answer = 1000000;
+    int answer = 200;
     while (minn <= maxx) {
         int tmpR = search_maxx(minn);
         if (tmpR == -1) break;
