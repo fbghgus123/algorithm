@@ -1,62 +1,64 @@
 #include <stdio.h>
 #include <vector>
-#include <queue>
 
 using namespace std;
 
-int N;
+int N, nums[50];
+bool primeNumber[2001], avail[50];
+int tmp;
+vector<int> answer;
 
-pair<int, int> arr[1000];
-int p = 0;
-
-int find_less(int myday) {
-    int result = 0;
-    for (int i=0; i<p; i++) {
-        if (arr[i].first <= myday) {
-            result++;
+bool btk(int cnt) {
+    if (cnt == N) {
+        printf("아도!\n");
+        return true;
+    }
+    for (int i=0; i<N; i++) {
+        if (avail[i]) {
+            avail[i] = false;
+            for (int j=0; j<N; j++) {
+                if (avail[j] && primeNumber[nums[j] + nums[i]]) {
+                    // printf("%d %d\n", nums[i], nums[j]);
+                    avail[j] = false;
+                    if (btk(cnt+2)) {
+                        avail[i] = true;
+                        avail[j] = true;
+                        return true;
+                    };
+                    avail[j] = true;
+                }
+            }
+            avail[i] = true;
         }
     }
-    return result;
+    return false;
 }
 
-struct cmp {
-    bool operator()(pair<int, int> a, pair<int, int> b) {
-        return a.second < b.second;
+void start() {
+    avail[0] = false;
+    int init = nums[0];
+    for (int i=1; i<N; i++) {
+        if (primeNumber[init + nums[i]]) {
+            printf("가능 %d\n", nums[i]);
+            avail[i] = false;
+            if (btk(2)) answer.push_back(nums[i]);
+            avail[i] = true;
+        }
     }
-};
-
-priority_queue<pair<int, int>, vector<pair<int, int>>, cmp> q;
+}
 
 int main() {
     scanf("%d", &N);
-    for (int i=0; i<N; i++) {
-        pair<int, int> tmp;
-        scanf("%d %d",&tmp.first, &tmp.second);
-        q.push(tmp);
+    for (int i=0; i<=2000; i++) primeNumber[i] = true;
+    for (int i=0; i<50; i++) avail[i] = true;
+    primeNumber[0] = primeNumber[1] = false;
+    for (int i=2; i<=15; i++) {
+        for (int j=i*2; j <= 2000; j+=i) primeNumber[j] = false;
     }
-    int day = 1, answer = 0;
-    while (!q.empty()) {
-        pair<int, int> tmp = q.top();
-        q.pop();
 
-        if (tmp.first - find_less(tmp.first) > day && q.size() > 0) {
-            arr[p++] = tmp;
-        }
-        else {
-            if (tmp.first >= day) {
-                answer += tmp.second;
-                day ++;
-                while (p > 0) {
-                    q.push(arr[--p]);
-                }
-            }
-        }
-        if (q.empty() && p > 0) {
-            while (p > 0) {
-                q.push(arr[--p]);
-            }
-        }
-    }
-    printf("%d\n", answer);
-    return 0;
+    for (int i=0; i<N; i++) scanf("%d", &nums[i]);
+    start();
+
+    if (answer.size() > 0) for (int i=0; i<answer.size(); i++) printf("%d ", answer[i]);
+    else printf("-1");
 }
