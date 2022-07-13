@@ -1,106 +1,106 @@
 #include <stdio.h>
+#include <cstring>
 #include <queue>
-#include <vector>
 
 using namespace std;
 
-int N, M;
-vector<pair<int, int>> lg[100001];
-struct road {
-    int p;
-    int min=1000000;
-    int max=0;
-} parent[18][100001];
+const int MAX = 1000000000;
 
-int depth[100001];
+int w, h, g, e;
+int grid[30][30];
+int dy[4] = {0, 1, 0, -1};
+int dx[4] = {1, 0, -1, 0};
 
-void LCS(int, int);
+struct Node {
+    int n, x1, y1, x2, y2, t;
+} NS[902];
 
-int main() {
-    scanf("%d", &N);
-    for (int i=0; i<N-1; i++) {
-        int a, b, v;
-        scanf("%d %d %d", &a, &b, &v);
-        lg[a].push_back({b, v});
-        lg[b].push_back({a, v});
-    }
-    // depth 초기화
-    for (int i=0; i<=N; i++) depth[i] = -1;
-    queue<int> q;
-    q.push(1);
-    depth[1] = 0;
+int P_size;
+struct Path {
+    int s, e, v;
+} P[1024 * 1024];
+
+int table[902];
+
+void bfs(int n) {
+    int visited[h][w];
+    memset(visited, -1, sizeof(visited));
+    queue<pair<int, int>> q;
+    q.push({NS[n].y2, NS[n].x2});
+    visited[NS[n].y2][NS[n].x2] = 0;
     while (!q.empty()) {
-        int cur = q.front();
+        pair<int, int> curr = q.front();
         q.pop();
-        for (pair<int, int> next : lg[cur]) {
-            if (depth[next.first] == -1) {
-                q.push(next.first);
-                depth[next.first] = depth[cur] + 1;
-                parent[0][next.first] = {cur, next.second, next.second};
+        for (int i=0; i<4; i++) {
+            int cy = curr.first + dy[i];
+            int cx = curr.second + dx[i];
+            if (0 <= cy && 0 <= cx && cy < h && cx < w) {
+                if (visited[cy][cx] == -1 && grid[cy][cx] == 0) {
+                    visited[cy][cx] = visited[curr.first][curr.second] + 1;
+                    q.push({cy, cx});
+                }
             }
         }
     }
-    
-    // 점핑 테이블
-    for (int r=1; r<18; r++) {
-        for (int i=1; i<=N; i++) {
-            road tmp = parent[r-1][parent[r-1][i].p];
-            tmp.max = tmp.max < parent[r-1][i].max ? parent[r-1][i].max : tmp.max;
-            tmp.min = tmp.min > parent[r-1][i].min ? parent[r-1][i].min : tmp.min;
-            parent[r][i] = tmp;
-        }
+    for (int i=1; i<=e+1; i++) {
+        if (visited[NS[i].y1][NS[i].x1] == -1) continue;
+        P[P_size++] = {n, i, visited[NS[i].y1][NS[i].x1] + NS[n].t};
     }
-
-    for(int r=0; r<3; r++) {
-        for (int i=1; i<=N; i++) {
-            printf("%d %d %d | ", parent[r][i].p, parent[r][i].min, parent[r][i].max);
-        }
-        printf("\n");
-    }
-
-    // scanf("%d", &M);
-    // for (int i=0; i<M; i++) {
-    //     int a, b;
-    //     scanf("%d %d", &a, &b);
-    //     LCS(a, b);
-    // }
 }
 
-void LCS(int a, int b) {
-    road tmpA = parent[0][a];
-    road tmpB = parent[0][b];
+int main() {
+    while (true) {
+        scanf("%d %d", &w, &h);
+        if (w == 0 && h == 0) break;
 
-    // 1. Depth 맞추기
-    if (depth[a] < depth[b]) {
-        int tmp = a;
-        a = b;
-        b = tmp;
-    }
-    int diff = depth[a] - depth[b];
-    for (int r=0; diff; r++) {
-        if (diff & 1) {
-            a = parent[r][a].p;
-            tmpA.max = tmpA.max > parent[r][a].max ? tmpA.max : parent[r][a].max;
-            tmpA.min = tmpA.min > parent[r][a].min ? parent[r][a].min : tmpA.min;
+        memset(grid, 0, sizeof(grid));
+        // 묘비 입력
+        scanf("%d", &g);
+        for (int i=0; i<g; i++) {
+            int x, y;
+            scanf("%d %d", &x, &y);
+            grid[y][x] = 1;
         }
-        diff >>= 1;
-    }
+        // 시작 노드
+        NS[0] = {0, 0, 0, 0, 0, 0};
+        // 구멍 입력
+        scanf("%d", &e);
+        int x1, y1, x2, y2, t;
+        for (int i=1; i<=e; i++) {
+            NS[i].n = i;
+            scanf("%d %d %d %d %d", &NS[i].x1, &NS[i].y1, &NS[i].x2, &NS[i].y2, &NS[i].t);
+        }
+        // 종료 노드
+        NS[e+1] = {e+1, w-1, h-1, w-1, h-1, 0};
 
-    // 2. 트리 올라가면서 찾기
-    while (a != b) {
-        int r;
-        for (r=0; r<18; r++) {
-            if (parent[r][a].p == parent[r][b].p) break;
+        // path 화
+        P_size = 0;
+        for (int i=0; i<=e; i++) {
+            bfs(i);
         }
-        if (r>0) --r;
-        a = parent[r][a].p;
-        tmpA.max = tmpA.max > parent[r][a].max ? tmpA.max : parent[r][a].max;
-        tmpA.min = tmpA.min > parent[r][a].min ? parent[r][a].min : tmpA.min;
-        b = parent[r][b].p;
-        tmpB.max = tmpB.max > parent[r][b].max ? tmpB.max : parent[r][b].max;
-        tmpB.min = tmpB.min > parent[r][b].min ? parent[r][b].min : tmpB.min;
+
+        // 테이블 초기화
+        table[0] = 0;
+        for (int i=1; i<=e+1; i++) table[i] = MAX;
+        for (int i=0; i<e+1; i++) {
+            for (int j=0; j<P_size; j++) {
+                if (table[P[j].s] < MAX && table[P[j].e] > table[P[j].s] + P[j].v) {
+                    table[P[j].e] = table[P[j].s] + P[j].v;
+                }
+            }
+        }
+        // 음수 사이클 확인
+        bool NegativeCycle = false;
+        for (int j=0; j<P_size; j++) {
+            if (table[P[j].s] < MAX && table[P[j].e] > table[P[j].s] + P[j].v) {
+                NegativeCycle = true;
+                break;
+            }
+        }
+
+        // 결과 출력
+        if (NegativeCycle) printf("Never\n");
+        else if (table[e+1] == MAX) printf("Impossible\n");
+        else printf("%d\n", table[e+1]);
     }
-    int max = tmpA.max > tmpB.max ? tmpA.max : tmpB.max;
-    int min = tmpA.min < tmpB.min ? tmpA.min : tmpB.min;
-    printf("%d %d\n", min, max);
 }
