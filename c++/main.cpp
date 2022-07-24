@@ -1,89 +1,61 @@
-// 문제 : https://www.acmicpc.net/problem/2887
-
 #include <stdio.h>
-#include <algorithm>
-#include <queue>
 #include <vector>
 
 using namespace std;
 
-int N, parent[100000];
+const int SIZE = (1 << 16);
+int ALLVISITED;
 
-int abs(int a) {
-    return a < 0 ? -a : a;
-}
+int N;
+int grid[15][15];
+int dp[15][SIZE];
 
-int min(int a, int b) {
-    return a < b ? a : b;
-}
+vector<int> answer;
 
-struct position {
-    int n;
-    int x, y, z;
-} P[100000];
-
-bool cmpX (position a, position b) {
-    return a.x < b.x;
-}
-
-bool cmpY (position a, position b) {
-    return a.y < b.y;
-}
-
-bool cmpZ (position a, position b) {
-    return a.z < b.z;
-}
-
-int find(int a) {
-    if (a == parent[a]) return a;
-    parent[a] = find(parent[a]);
-    return parent[a];
-}
-
-void join(int a, int b) {
-    int aRoot = find(a);
-    int bRoot = find(b);
-    parent[bRoot] = aRoot;
+void check() {
+    for (int visited=1; visited<ALLVISITED; visited++) {
+        // 하나 짜리 방문 패스
+        for (int j=1; j < ALLVISITED; j = j<<1) {
+            if (visited != 1 && visited == j) continue;
+        }
+        // 순회
+        for (int curr=0; curr<N; curr++) {
+            // 방문한 곳이라면,
+            if (dp[curr][visited] != -1) {
+                for (int k=0; k<N; k++) {
+                    if (grid[curr][k] )
+                    int isVisited = (1 << k) & visited;
+                    int nextVisited = (1 << k) | visited;
+                    if (!isVisited && dp[k][nextVisited] < dp[curr][visited] + 1) {
+                        dp[k][nextVisited] = dp[curr][visited] + 1;
+                    }
+                }
+            }
+        }
+    }
+    
+    for (int i=0; i<N; i++) {
+        for (int j=0; j<N; j++) {
+            printf("%d ", dp[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 int main() {
     scanf("%d", &N);
     for (int i=0; i<N; i++) {
-        parent[i] = i;
-        P[i].n = i;   
-        scanf("%d %d %d", &P[i].x, &P[i].y, &P[i].z);
-    }
-
-    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int,int> >>> pq;
-
-    sort(P, P+N, cmpX);
-    for (int i=1; i<N; i++) {
-        pq.push({abs(P[i].x - P[i-1].x), {P[i].n, P[i-1].n}});
-    }
-
-    sort(P, P+N, cmpY);
-    for (int i=1; i<N; i++) {
-        pq.push({abs(P[i].y - P[i-1].y), {P[i].n, P[i-1].n}});
-    }
-
-    sort(P, P+N, cmpZ);
-    for (int i=1; i<N; i++) {
-        pq.push({abs(P[i].z - P[i-1].z), {P[i].n, P[i-1].n}});
-    }
-
-    int count = 0;
-    int answer = 0;
-    while (count < N-1) {
-        pair<int, pair<int, int> > tmp = pq.top();
-        pq.pop();
-
-        int a = tmp.second.first;
-        int b = tmp.second.second;
-        if (find(a) != find(b)) {
-            count++;
-            join(a, b);
-            answer += tmp.first;
+        for (int j=0; j<N; j++) {
+            dp[i][j] = -1;
         }
     }
-    printf("%d\n", answer);
+    dp[0][0] = 0;
+    ALLVISITED = (1 << N) - 1;
+    for (int i=0; i<N; i++) {
+        for (int j=0; j<N; j++) {
+            scanf("%1d", &grid[i][j]);
+            if (!grid[i][j]) grid[i][j] = 200000000;
+        }
+    }
+    check();
 }
