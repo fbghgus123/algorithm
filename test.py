@@ -1,31 +1,23 @@
-from itertools import permutations
+from collections import deque
+grid = [list(input()) for _ in range(8)]
 
-field = [0, 0, 0]
+dx = (1, 0, -1)
 
-def hit1(field):
-    global score
-    score += sum(field[:1])
-    field = field[1:] + [1]
-    return field
+def bfs():
+    queue = deque()
+    queue.append((7, 0))
 
-def hit2(field):
-    global score
-    score += sum(field[:2])
-    field = field[2:] + [1, 0]
-    return field
+    while queue:
+        y, x = queue.popleft()
+        print(y, x)
+        for i in range(3):
+            cy = y - 1
+            cx = x + dx[i]
+            if 0 <= cy < 8 and 0 <= cx < 8:
+                if grid[cy][cx] != '#':
+                    queue.append((cy, cx))
+                if cy == 0 and cx == 7:
+                    return 1
+    return 0
 
-def hit3(field):
-    global score
-    score += sum(field[:3])
-    field = [1, 0, 0]
-    return field
-
-def homerun(field):
-    global score
-    score += sum(field) + 1
-    field = [0, 0, 0]
-    return field
-
-n = int(input())
-for i in permutations(list(range(8)), 8):
-    print(i)
+print(bfs())
