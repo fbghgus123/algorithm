@@ -3,6 +3,14 @@
 
 using namespace std;
 
+<<<<<<< HEAD
+int main() {
+    ios_base :: sync_with_stdio(false); 
+    cin.tie(NULL); 
+    cout.tie(NULL);
+
+    cout << "테스트" << endl;
+=======
 const int SIZE = (1 << 16);
 int ALLVISITED;
 
@@ -58,4 +66,5 @@ int main() {
         }
     }
     check();
+>>>>>>> 096890ae06b038bc437cba13e3ab3c561fd9cda0
 }
