@@ -51,3 +51,5 @@ def dfs(idx):
             graph[x][y] = 0
 
 dfs(0)
+
+[0]
