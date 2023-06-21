@@ -1,50 +1,39 @@
-// 문제 : https://www.acmicpc.net/problem/1700
-
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import kotlin.collections.ArrayDeque
 
 val br = BufferedReader(InputStreamReader(System.`in`))
+fun inputInt() = br.readLine().toInt()
 fun inputIntList() = br.readLine().split(" ").map { it.toInt() }
-
-val info = Array(101) { mutableListOf<Int>() }
-var answer = 0
 
 fun main() {
     val (n, k) = inputIntList()
-    val plug = ArrayDeque(inputIntList())
+    val appliances = inputIntList()
+    val expected = Array(k + 1) { mutableListOf<Int>() }
+    val plug = mutableListOf<Int>()
+    var answer = 0
 
-    plug.forEachIndexed { index, i ->
-        info[i].add(index)
+    for (i in 0 until k) {
+        expected[appliances[i]].add(i)
     }
 
-    val multitab = mutableListOf<Int>()
+    for (i in 0 until k) {
+        val current = appliances[i]
+        expected[current].removeFirst()
 
-    while (plug.isNotEmpty()) {
-        val target = plug.removeFirst()
-        info[target].removeFirst()
-
-        if (target in multitab) {
+        if (current in plug) {
             continue
         }
 
-        if (multitab.size < n) {
-            multitab.add(target)
+        if (plug.size < n) {
+            plug.add(current)
             continue
         }
 
-        val recentFuture = multitab.map {
-            if (info[it].isEmpty()) {
-                101
-            } else {
-                info[it].first()
-            }
-        }
-
-        val maxx = recentFuture.max()
-        val changeTargetIndex = recentFuture.indexOfFirst { it == maxx }
-        multitab.removeAt(changeTargetIndex)
-        multitab.add(target)
-        answer++
+        val order = plug.map { expected[it].firstOrNull() ?: (k + 1) }
+        val target = order.indexOf(order.max())
+        plug[target] = current
+        answer += 1
     }
     println(answer)
 }
