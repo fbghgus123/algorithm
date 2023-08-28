@@ -1,3 +1,5 @@
+// 문제: https://www.acmicpc.net/problem/1004
+
 #include <stdio.h>
 #include <vector>
 #include <cmath>
