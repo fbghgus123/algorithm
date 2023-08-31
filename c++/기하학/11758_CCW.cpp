@@ -1,6 +1,6 @@
+// 문제: https://www.acmicpc.net/problem/11758
+
 #include <stdio.h>
-#include <vector>
-#include <cmath>
 
 using namespace std;
 

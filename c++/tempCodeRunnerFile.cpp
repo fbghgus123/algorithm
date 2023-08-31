@@ -1,2 +1,1 @@
-
-            printf("0\n");
+heights[end] - heights[start]
